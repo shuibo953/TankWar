@@ -1,5 +1,9 @@
 package com.shuibo.tank;
 
+import com.shuibo.tank.fireStrategy.AllDir;
+import com.shuibo.tank.fireStrategy.DefaultFireStrategy;
+import com.shuibo.tank.fireStrategy.FireStrategy;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -15,7 +19,9 @@ public class MemberManager {
     private static final HashSet<Explode> explodes = new HashSet<>();
     private static final ArrayList<Dir> mainTankDirs = new ArrayList<>();
     private static final Random random = new Random();
+    private static final FireStrategy oneDir = new DefaultFireStrategy(), allDir = new AllDir();
     private static boolean isFire;
+    private static int strategy;
 
     static {
         for (int i = 0, enemyAmount = ConstantManager.getValue("enemyAmount"); i < enemyAmount; i++)
@@ -23,7 +29,6 @@ public class MemberManager {
     }
 
     public static void keyPressed(KeyEvent e) {
-        if (e.getKeyChar() == ' ') isFire = true;
         switch (e.getKeyCode()) {
             case KeyEvent.VK_UP:
                 if (!mainTankDirs.contains(Dir.UP)) mainTankDirs.add(Dir.UP);
@@ -36,11 +41,16 @@ public class MemberManager {
                 break;
             case KeyEvent.VK_RIGHT:
                 if (!mainTankDirs.contains(Dir.RIGHT)) mainTankDirs.add(Dir.RIGHT);
+                break;
+            case KeyEvent.VK_SPACE:
+                isFire = true;
+                break;
+            case KeyEvent.VK_CONTROL:
+                strategy = (strategy++ == 1 ? 0 : strategy);
         }
     }
 
     public static void keyReleased(KeyEvent e) {
-        if (e.getKeyChar() == ' ') isFire = false;
         switch (e.getKeyCode()) {
             case KeyEvent.VK_UP:
                 mainTankDirs.remove(Dir.UP);
@@ -53,6 +63,9 @@ public class MemberManager {
                 break;
             case KeyEvent.VK_RIGHT:
                 mainTankDirs.remove(Dir.RIGHT);
+                break;
+            case KeyEvent.VK_SPACE:
+                isFire = false;
         }
     }
 
@@ -102,13 +115,24 @@ public class MemberManager {
 
     private static void mainAction() {
         mainTank.setDir(mainTankDirs);
-        if (isFire) mainTank.fire(mainBullets);
+        if (isFire) {
+            switch (strategy) {
+                case 0:
+                    mainTank.fire(mainBullets, oneDir);
+                    break;
+                case 1:
+                    mainTank.fire(mainBullets, allDir);
+                    break;
+                case 2:
+//                    mainTank.fire(mainBullets, new NBomb());
+            }
+        }
     }
 
     private static void enemyAction() {
         for (Tank enemy : enemies) {
-            if (random.nextInt(100) > 95) enemy.setDir(Dir.values()[random.nextInt(4)]);
-            if (random.nextInt(10) > 8) enemy.fire(enemyBullets);
+            if (random.nextInt(10) > 8) enemy.setDir(Dir.values()[random.nextInt(4)]);
+            if (random.nextInt(10) > 8) enemy.fire(enemyBullets, oneDir);
         }
     }
 

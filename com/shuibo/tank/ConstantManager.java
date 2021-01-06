@@ -5,6 +5,7 @@ import java.util.Properties;
 
 public class ConstantManager {
     private static final Properties properties = new Properties();
+
     static {
         try {
             properties.load(ConstantManager.class.getClassLoader().getResourceAsStream("constant"));

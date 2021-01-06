@@ -5,7 +5,8 @@ import java.awt.image.BufferedImage;
 
 public class Bullet {
     private static final int WIDTH = ImageManager.bulletUImage.getWidth(),
-            HEIGHT = ImageManager.bulletUImage.getHeight(), SPEED = ConstantManager.getValue("BULLET_SPEED");
+            HEIGHT = ImageManager.bulletUImage.getHeight(),
+            SPEED = ConstantManager.getValue("BULLET_SPEED");
     private final Dir dir;
     private final BufferedImage image;
     private final Rectangle rectangle;

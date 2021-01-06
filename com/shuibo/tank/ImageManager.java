@@ -21,9 +21,8 @@ public class ImageManager {
             bulletDImage = ImageUtil.rotateImage(bulletUImage, 180);
             bulletLImage = ImageUtil.rotateImage(bulletUImage, -90);
             bulletRImage = ImageUtil.rotateImage(bulletUImage, 90);
-            for (int i = 0; i < explodes.length; ) {
+            for (int i = 0; i < explodes.length; )
                 explodes[i] = ImageIO.read(Objects.requireNonNull(classLoader.getResourceAsStream(String.format("image/e%d.gif", ++i))));
-            }
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }

@@ -1,5 +1,7 @@
 package com.shuibo.tank;
 
+import com.shuibo.tank.fireStrategy.FireStrategy;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -35,8 +37,8 @@ public class Tank {
         return y;
     }
 
-    public Rectangle getRectangle() {
-        return rectangle;
+    public Dir getDir() {
+        return dir;
     }
 
     public void setDir(ArrayList<Dir> dir) {
@@ -48,8 +50,12 @@ public class Tank {
         this.dir = dir;
     }
 
-    public void fire(HashSet<Bullet> bullets) {
-        bullets.add(new Bullet(x, y, dir));
+    public Rectangle getRectangle() {
+        return rectangle;
+    }
+
+    public void fire(HashSet<Bullet> bullets, FireStrategy fireStrategy) {
+        fireStrategy.fire(bullets, this);
     }
 
     public void paint(Graphics graphics) {
