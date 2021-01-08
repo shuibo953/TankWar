@@ -90,19 +90,17 @@ public abstract class Tank {
     protected void move() {
         switch (dir) {
             case UP:
-                y = (Math.max(y -= SPEED, 30));
+                rectangle.y = y = (Math.max(y -= SPEED, 30));
                 break;
             case DOWN:
-                y = (Math.min(y += SPEED, GAME_HEIGHT - HEIGHT));
+                rectangle.y = y = (Math.min(y += SPEED, GAME_HEIGHT - HEIGHT));
                 break;
             case LEFT:
-                x = (Math.max(x -= SPEED, 0));
+                rectangle.x = x = (Math.max(x -= SPEED, 0));
                 break;
             case RIGHT:
-                x = (Math.min(x += SPEED, GAME_WIDTH - WIDTH));
+                rectangle.x = x = (Math.min(x += SPEED, GAME_WIDTH - WIDTH));
         }
-        rectangle.x = this.x;
-        rectangle.y = this.y;
     }
 
     public abstract void paint(Graphics graphics);

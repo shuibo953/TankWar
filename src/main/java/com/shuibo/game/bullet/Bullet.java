@@ -18,9 +18,9 @@ public class Bullet {
     private int x, y;
 
     public Bullet(int tankX, int tankY, Dir dir) {
-        this.x = tankX + (Tank.getWidth() - WIDTH) / 2;
-        this.y = tankY + (Tank.getHeight() - HEIGHT) / 2;
-        rectangle = new Rectangle(this.x, this.y, WIDTH, HEIGHT);
+        x = tankX + (Tank.getWidth() - WIDTH) / 2;
+        y = tankY + (Tank.getHeight() - HEIGHT) / 2;
+        rectangle = new Rectangle(x, y, WIDTH, HEIGHT);
         switch (this.dir = dir) {
             case UP:
                 image = ImageManager.bulletUImage;
@@ -59,18 +59,16 @@ public class Bullet {
     private void updateXY() {
         switch (dir) {
             case UP:
-                y -= SPEED;
+                rectangle.y = y -= SPEED;
                 break;
             case DOWN:
-                y += SPEED;
+                rectangle.y = y += SPEED;
                 break;
             case LEFT:
-                x -= SPEED;
+                rectangle.x = x -= SPEED;
                 break;
             case RIGHT:
-                x += SPEED;
+                rectangle.x = x += SPEED;
         }
-        rectangle.x = this.x;
-        rectangle.y = this.y;
     }
 }

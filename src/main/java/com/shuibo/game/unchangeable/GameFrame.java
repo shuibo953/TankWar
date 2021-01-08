@@ -14,9 +14,9 @@ public class GameFrame extends Frame {
     private Image offScreenImage = null;
 
     private GameFrame() {
+        setTitle("坦克世界");
         setSize(GAME_WIDTH, GAME_HEIGHT);
         setResizable(false);
-        setTitle("tank war");
         setVisible(true);
 
         addKeyListener(new KeyAdapter() {
