@@ -17,6 +17,6 @@ public class ConstantManager {
     private ConstantManager() {}
 
     public static String getValue(String key) {
-        return (String) properties.get(key);
+        return properties.getProperty(key);
     }
 }

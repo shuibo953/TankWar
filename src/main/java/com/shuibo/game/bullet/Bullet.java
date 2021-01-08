@@ -1,6 +1,8 @@
 package com.shuibo.game.bullet;
 
 import com.shuibo.game.Dir;
+import com.shuibo.game.imageFactory.ImageFactory1;
+import com.shuibo.game.imageFactory.ImageFactory2;
 import com.shuibo.game.tank.Tank;
 import com.shuibo.game.unchangeable.ConstantManager;
 import com.shuibo.game.unchangeable.ImageManager;
@@ -36,6 +38,21 @@ public class Bullet {
                 break;
             default:
                 image = null;
+        }
+        // ImageFactory2使用的子弹图片不是对称的
+        if (ImageManager.imageFactory instanceof ImageFactory1) return;
+        switch (this.dir) {
+            case UP:
+                ++x;
+                break;
+            case DOWN:
+                --x;
+                break;
+            case LEFT:
+                --y;
+                break;
+            case RIGHT:
+                ++y;
         }
     }
 
