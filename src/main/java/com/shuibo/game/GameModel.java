@@ -5,8 +5,6 @@ import com.shuibo.game.bullet.NBomb;
 import com.shuibo.game.tank.AutoTank;
 import com.shuibo.game.tank.ManualTank;
 import com.shuibo.game.tank.Tank;
-import com.shuibo.game.unchangeable.ConstantManager;
-import com.shuibo.game.unchangeable.GameFrame;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -14,23 +12,21 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 
-public class MemberManager {
-    private static final ManualTank mainTank = new ManualTank(0, 30);
-    private static final HashSet<Bullet> mainBullets = new HashSet<>();
-    private static final HashSet<AutoTank> enemies = new HashSet<>();
-    private static final HashSet<Bullet> enemyBullets = new HashSet<>();
-    private static final HashSet<Explode> explodes = new HashSet<>();
-    private static final ArrayList<Dir> mainTankDirs = new ArrayList<>();
+public enum GameModel {
+    INSTANCE;
+    private final ManualTank mainTank = new ManualTank(0, 30);
+    private final HashSet<Bullet> mainBullets = new HashSet<>();
+    private final HashSet<AutoTank> enemies = new HashSet<>();
+    private final HashSet<Bullet> enemyBullets = new HashSet<>();
+    private final HashSet<Explode> explodes = new HashSet<>();
+    private final ArrayList<Dir> mainTankDirs = new ArrayList<>();
 
-    static {
-        for (int i = 0, enemyAmount = Integer.parseInt(ConstantManager.getValue("enemyAmount")); i < enemyAmount; i++)
+    {
+        for (int i = 0, enemyAmount = Integer.parseInt(PropertyManager.INSTANCE.getValue("enemyAmount")); i < enemyAmount; i++)
             enemies.add(new AutoTank(GameFrame.getGameWidth() / (enemyAmount + 1) * (i + 1), GameFrame.getGameHeight() / 2));
     }
 
-    private MemberManager() {
-    }
-
-    public static void keyPressed(KeyEvent e) {
+    public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_UP:
                 if (!mainTankDirs.contains(Dir.UP)) mainTankDirs.add(Dir.UP);
@@ -52,7 +48,7 @@ public class MemberManager {
         }
     }
 
-    public static void keyReleased(KeyEvent e) {
+    public void keyReleased(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_UP:
                 mainTankDirs.remove(Dir.UP);
@@ -71,7 +67,7 @@ public class MemberManager {
         }
     }
 
-    public static void paint(Graphics graphics) {
+    public void paint(Graphics graphics) {
         mainBullets.forEach(bullet -> bullet.paint(graphics));
         enemyBullets.forEach(bullet -> bullet.paint(graphics));
         mainTank.paint(graphics);
@@ -85,13 +81,13 @@ public class MemberManager {
         nextState();
     }
 
-    private static void nextState() {
+    private void nextState() {
         ifHitMain();
         ifFireNBomb();
         ifHitEnemy();
 
-        mainBullets.removeIf(MemberManager::isOffRange);
-        enemyBullets.removeIf(MemberManager::isOffRange);
+        mainBullets.removeIf(this::isOffRange);
+        enemyBullets.removeIf(this::isOffRange);
         explodes.removeIf(Explode::isExploded);
 
         mainTank.setIsMoving_Dir(mainTankDirs);
@@ -99,11 +95,11 @@ public class MemberManager {
         for (Tank enemy : enemies) enemy.fire(enemyBullets);
     }
 
-    private static void ifHitMain() {
+    private void ifHitMain() {
         for (Bullet bullet : enemyBullets) if (isCashing(mainTank, bullet)) System.exit(0);
     }
 
-    private static void ifFireNBomb() {
+    private void ifFireNBomb() {
         Iterator<Bullet> iterator = mainBullets.iterator();
         while (iterator.hasNext()) {
             Bullet bullet = iterator.next();
@@ -116,7 +112,7 @@ public class MemberManager {
         }
     }
 
-    private static void ifHitEnemy() {
+    private void ifHitEnemy() {
         Iterator<AutoTank> enemyIterator = enemies.iterator();
         while (enemyIterator.hasNext()) {
             Tank enemy = enemyIterator.next();
@@ -129,11 +125,11 @@ public class MemberManager {
         }
     }
 
-    private static boolean isCashing(Tank tank, Bullet bullet) {
+    private boolean isCashing(Tank tank, Bullet bullet) {
         return tank.getRectangle().intersects(bullet.getRectangle());
     }
 
-    private static boolean isOffRange(Bullet bullet) {
+    private boolean isOffRange(Bullet bullet) {
         int x = bullet.getX(), y = bullet.getY();
         return (x < 0 || y < 0 || x > GameFrame.getGameWidth() || y > GameFrame.getGameHeight());
     }

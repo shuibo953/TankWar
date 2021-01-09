@@ -1,15 +1,11 @@
-package com.shuibo.game.unchangeable;
+package com.shuibo.game;
 
 import com.shuibo.game.imageFactory.ImageFactory;
 import com.shuibo.game.imageFactory.ImageFactory1;
-import com.shuibo.game.imageFactory.ImageFactory2;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class ImageManager {
     public static final ImageFactory imageFactory = ImageFactory1.getInstance();

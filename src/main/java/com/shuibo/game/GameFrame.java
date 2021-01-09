@@ -1,6 +1,4 @@
-package com.shuibo.game.unchangeable;
-
-import com.shuibo.game.MemberManager;
+package com.shuibo.game;
 
 import java.awt.*;
 import java.awt.event.KeyAdapter;
@@ -9,8 +7,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class GameFrame extends Frame {
-    private static final int GAME_WIDTH = Integer.parseInt(ConstantManager.getValue("GAME_WIDTH")),
-            GAME_HEIGHT = Integer.parseInt(ConstantManager.getValue("GAME_HEIGHT"));
+    private static final int GAME_WIDTH = Integer.parseInt(PropertyManager.INSTANCE.getValue("GAME_WIDTH")),
+            GAME_HEIGHT = Integer.parseInt(PropertyManager.INSTANCE.getValue("GAME_HEIGHT"));
+    private final GameModel gameModel = GameModel.INSTANCE;
     private Image offScreenImage = null;
 
     private GameFrame() {
@@ -22,12 +21,12 @@ public class GameFrame extends Frame {
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                MemberManager.keyPressed(e);
+                gameModel.keyPressed(e);
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                MemberManager.keyReleased(e);
+                gameModel.keyReleased(e);
             }
         });
         addWindowListener(new WindowAdapter() {
@@ -62,7 +61,7 @@ public class GameFrame extends Frame {
 
     @Override
     public void paint(Graphics graphics) {
-        MemberManager.paint(graphics);
+        gameModel.paint(graphics);
     }
 
     private static class TankWarFrameHolder {

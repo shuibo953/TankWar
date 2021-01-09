@@ -4,9 +4,9 @@ import com.shuibo.game.*;
 import com.shuibo.game.bullet.Bullet;
 import com.shuibo.game.fireStrategy.DefaultFireStrategy;
 import com.shuibo.game.fireStrategy.FireStrategy;
-import com.shuibo.game.unchangeable.ConstantManager;
-import com.shuibo.game.unchangeable.GameFrame;
-import com.shuibo.game.unchangeable.ImageManager;
+import com.shuibo.game.PropertyManager;
+import com.shuibo.game.GameFrame;
+import com.shuibo.game.ImageManager;
 
 import java.awt.*;
 import java.util.HashSet;
@@ -14,7 +14,7 @@ import java.util.HashSet;
 public abstract class Tank {
     private static final int WIDTH = ImageManager.tankUImage.getWidth(), HEIGHT = ImageManager.tankUImage.getHeight(),
             GAME_WIDTH = GameFrame.getGameWidth(), GAME_HEIGHT = GameFrame.getGameHeight(),
-            SPEED = Integer.parseInt(ConstantManager.getValue("TANK_SPEED"));
+            SPEED = Integer.parseInt(PropertyManager.INSTANCE.getValue("TANK_SPEED"));
     private final Rectangle rectangle;
     private int x, y;           //坦克的位置
     private FireStrategy fireStrategy = DefaultFireStrategy.STRATEGY;

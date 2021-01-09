@@ -1,7 +1,5 @@
 package com.shuibo.game.imageFactory;
 
-import com.shuibo.game.unchangeable.ImageManager;
-
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;

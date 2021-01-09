@@ -2,10 +2,9 @@ package com.shuibo.game.bullet;
 
 import com.shuibo.game.Dir;
 import com.shuibo.game.imageFactory.ImageFactory1;
-import com.shuibo.game.imageFactory.ImageFactory2;
 import com.shuibo.game.tank.Tank;
-import com.shuibo.game.unchangeable.ConstantManager;
-import com.shuibo.game.unchangeable.ImageManager;
+import com.shuibo.game.PropertyManager;
+import com.shuibo.game.ImageManager;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -13,7 +12,7 @@ import java.awt.image.BufferedImage;
 public class Bullet {
     private static final int WIDTH = ImageManager.bulletUImage.getWidth(),
             HEIGHT = ImageManager.bulletUImage.getHeight(),
-            SPEED = Integer.parseInt(ConstantManager.getValue("BULLET_SPEED"));
+            SPEED = Integer.parseInt(PropertyManager.INSTANCE.getValue("BULLET_SPEED"));
     private final Dir dir;
     private final BufferedImage image;
     private final Rectangle rectangle;

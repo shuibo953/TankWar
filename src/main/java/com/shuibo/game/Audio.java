@@ -1,4 +1,4 @@
-package com.shuibo.game.unchangeable;
+package com.shuibo.game;
 
 import java.io.IOException;
 

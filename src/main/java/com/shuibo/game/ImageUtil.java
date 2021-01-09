@@ -1,4 +1,4 @@
-package com.shuibo.game.unchangeable;
+package com.shuibo.game;
 
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
