@@ -1,7 +1,6 @@
 package com.shuibo.game.imageFactory;
 
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public abstract class ImageFactory {

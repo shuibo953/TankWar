@@ -13,8 +13,8 @@ import java.util.HashSet;
 
 public abstract class Tank {
     private static final int SPEED = Integer.parseInt(PropertyManager.INSTANCE.getValue("TANK_SPEED")),
-            WIDTH = ImageManager.INSTANCE.tankUImage.getWidth(),
-            HEIGHT = ImageManager.INSTANCE.tankUImage.getHeight(),
+            WIDTH = ImageManager.INSTANCE.getTankUImage().getWidth(),
+            HEIGHT = ImageManager.INSTANCE.getTankUImage().getHeight(),
             UP_LIMIT = 30, DOWN_LIMIT = GameFrame.getInstance().getGameHeight() - HEIGHT,
             LEFT_LIMIT = 0, RIGHT_LIMIT = GameFrame.getInstance().getGameWidth() - WIDTH;
     private final Rectangle rectangle;
@@ -76,16 +76,16 @@ public abstract class Tank {
     protected void paintHelper(Graphics graphics) {
         switch (dir) {
             case UP:
-                graphics.drawImage(ImageManager.INSTANCE.tankUImage, x, y, null);
+                graphics.drawImage(ImageManager.INSTANCE.getTankUImage(), x, y, null);
                 break;
             case DOWN:
-                graphics.drawImage(ImageManager.INSTANCE.tankDImage, x, y, null);
+                graphics.drawImage(ImageManager.INSTANCE.getTankDImage(), x, y, null);
                 break;
             case LEFT:
-                graphics.drawImage(ImageManager.INSTANCE.tankLImage, x, y, null);
+                graphics.drawImage(ImageManager.INSTANCE.getTankLImage(), x, y, null);
                 break;
             case RIGHT:
-                graphics.drawImage(ImageManager.INSTANCE.tankRImage, x, y, null);
+                graphics.drawImage(ImageManager.INSTANCE.getTankRImage(), x, y, null);
         }
     }
 
