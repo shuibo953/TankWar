@@ -20,10 +20,11 @@ public enum GameModel {
     private final HashSet<Bullet> enemyBullets = new HashSet<>();
     private final HashSet<Explode> explodes = new HashSet<>();
     private final ArrayList<Dir> mainTankDirs = new ArrayList<>();
+    private final int width = GameFrame.getInstance().getGameWidth(), height = GameFrame.getInstance().getGameHeight();
 
     {
         for (int i = 0, enemyAmount = Integer.parseInt(PropertyManager.INSTANCE.getValue("enemyAmount")); i < enemyAmount; i++)
-            enemies.add(new AutoTank(GameFrame.getGameWidth() / (enemyAmount + 1) * (i + 1), GameFrame.getGameHeight() / 2));
+            enemies.add(new AutoTank(width / (enemyAmount + 1) * (i + 1), height / 2));
     }
 
     public void keyPressed(KeyEvent e) {
@@ -131,6 +132,6 @@ public enum GameModel {
 
     private boolean isOffRange(Bullet bullet) {
         int x = bullet.getX(), y = bullet.getY();
-        return (x < 0 || y < 0 || x > GameFrame.getGameWidth() || y > GameFrame.getGameHeight());
+        return (x < 0 || y < 0 || x > width || y > height);
     }
 }

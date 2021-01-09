@@ -12,9 +12,11 @@ import java.awt.*;
 import java.util.HashSet;
 
 public abstract class Tank {
-    private static final int WIDTH = ImageManager.INSTANCE.tankUImage.getWidth(), HEIGHT = ImageManager.INSTANCE.tankUImage.getHeight(),
-            GAME_WIDTH = GameFrame.getGameWidth(), GAME_HEIGHT = GameFrame.getGameHeight(),
-            SPEED = Integer.parseInt(PropertyManager.INSTANCE.getValue("TANK_SPEED"));
+    private static final int SPEED = Integer.parseInt(PropertyManager.INSTANCE.getValue("TANK_SPEED")),
+            WIDTH = ImageManager.INSTANCE.tankUImage.getWidth(),
+            HEIGHT = ImageManager.INSTANCE.tankUImage.getHeight(),
+            UP_LIMIT = 30, DOWN_LIMIT = GameFrame.getInstance().getGameHeight() - HEIGHT,
+            LEFT_LIMIT = 0, RIGHT_LIMIT = GameFrame.getInstance().getGameWidth() - WIDTH;
     private final Rectangle rectangle;
     private int x, y;           //坦克的位置
     private FireStrategy fireStrategy = DefaultFireStrategy.STRATEGY;
@@ -90,16 +92,16 @@ public abstract class Tank {
     protected void move() {
         switch (dir) {
             case UP:
-                rectangle.y = y = (Math.max(y -= SPEED, 30));
+                rectangle.y = y = (Math.max(y -= SPEED, UP_LIMIT));
                 break;
             case DOWN:
-                rectangle.y = y = (Math.min(y += SPEED, GAME_HEIGHT - HEIGHT));
+                rectangle.y = y = (Math.min(y += SPEED, DOWN_LIMIT));
                 break;
             case LEFT:
-                rectangle.x = x = (Math.max(x -= SPEED, 0));
+                rectangle.x = x = (Math.max(x -= SPEED, LEFT_LIMIT));
                 break;
             case RIGHT:
-                rectangle.x = x = (Math.min(x += SPEED, GAME_WIDTH - WIDTH));
+                rectangle.x = x = (Math.min(x += SPEED, RIGHT_LIMIT));
         }
     }
 
