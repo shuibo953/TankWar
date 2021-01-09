@@ -17,22 +17,36 @@ public class ImageFactory2 extends ImageFactory {
     }
 
     @Override
-    public BufferedImage getTankImage() throws IOException {
-        return ImageIO.read(Objects.requireNonNull(getClassLoader().getResourceAsStream("image/tankU.gif")));
+    public BufferedImage getTankImage() {
+        try {
+            return ImageIO.read(Objects.requireNonNull(getClassLoader().getResourceAsStream("image/tankU.gif")));
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+            return null;
+        }
     }
 
     @Override
-    public BufferedImage getBulletImage() throws IOException {
-        return ImageIO.read(Objects.requireNonNull(getClassLoader().getResourceAsStream("image/bulletU.gif")));
+    public BufferedImage getBulletImage() {
+        try {
+            return ImageIO.read(Objects.requireNonNull(getClassLoader().getResourceAsStream("image/bulletU.gif")));
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+            return null;
+        }
     }
 
     @Override
-    public ArrayList<BufferedImage> getExplodeImage() throws IOException {
+    public ArrayList<BufferedImage> getExplodeImage() {
         ArrayList<BufferedImage> result = new ArrayList<>();
         ClassLoader classLoader = getClassLoader();
         int i = 0;
-        for (InputStream inputStream; (inputStream = classLoader.getResourceAsStream(String.format("image/%d.gif", i++))) != null; )
-            result.add(ImageIO.read(inputStream));
+        try {
+            for (InputStream inputStream; (inputStream = classLoader.getResourceAsStream(String.format("image/%d.gif", i++))) != null; )
+                result.add(ImageIO.read(inputStream));
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
         return result;
     }
 

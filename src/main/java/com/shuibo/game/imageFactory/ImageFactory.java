@@ -11,9 +11,9 @@ public abstract class ImageFactory {
         return CLASS_LOADER;
     }
 
-    public abstract BufferedImage getTankImage() throws IOException;
+    public abstract BufferedImage getTankImage();
 
-    public abstract BufferedImage getBulletImage() throws IOException;
+    public abstract BufferedImage getBulletImage();
 
-    public abstract ArrayList<BufferedImage> getExplodeImage() throws IOException;
+    public abstract ArrayList<BufferedImage> getExplodeImage();
 }

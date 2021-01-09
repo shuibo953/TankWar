@@ -7,6 +7,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class GameFrame extends Frame {
+    // todo: Singleton -> no static
     private static final int GAME_WIDTH = Integer.parseInt(PropertyManager.INSTANCE.getValue("GAME_WIDTH")),
             GAME_HEIGHT = Integer.parseInt(PropertyManager.INSTANCE.getValue("GAME_HEIGHT"));
     private final GameModel gameModel = GameModel.INSTANCE;

@@ -12,7 +12,7 @@ import java.awt.*;
 import java.util.HashSet;
 
 public abstract class Tank {
-    private static final int WIDTH = ImageManager.tankUImage.getWidth(), HEIGHT = ImageManager.tankUImage.getHeight(),
+    private static final int WIDTH = ImageManager.INSTANCE.tankUImage.getWidth(), HEIGHT = ImageManager.INSTANCE.tankUImage.getHeight(),
             GAME_WIDTH = GameFrame.getGameWidth(), GAME_HEIGHT = GameFrame.getGameHeight(),
             SPEED = Integer.parseInt(PropertyManager.INSTANCE.getValue("TANK_SPEED"));
     private final Rectangle rectangle;
@@ -74,16 +74,16 @@ public abstract class Tank {
     protected void paintHelper(Graphics graphics) {
         switch (dir) {
             case UP:
-                graphics.drawImage(ImageManager.tankUImage, x, y, null);
+                graphics.drawImage(ImageManager.INSTANCE.tankUImage, x, y, null);
                 break;
             case DOWN:
-                graphics.drawImage(ImageManager.tankDImage, x, y, null);
+                graphics.drawImage(ImageManager.INSTANCE.tankDImage, x, y, null);
                 break;
             case LEFT:
-                graphics.drawImage(ImageManager.tankLImage, x, y, null);
+                graphics.drawImage(ImageManager.INSTANCE.tankLImage, x, y, null);
                 break;
             case RIGHT:
-                graphics.drawImage(ImageManager.tankRImage, x, y, null);
+                graphics.drawImage(ImageManager.INSTANCE.tankRImage, x, y, null);
         }
     }
 

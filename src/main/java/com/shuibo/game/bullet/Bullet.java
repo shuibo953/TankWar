@@ -10,8 +10,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Bullet {
-    private static final int WIDTH = ImageManager.bulletUImage.getWidth(),
-            HEIGHT = ImageManager.bulletUImage.getHeight(),
+    private static final int WIDTH = ImageManager.INSTANCE.bulletUImage.getWidth(),
+            HEIGHT = ImageManager.INSTANCE.bulletUImage.getHeight(),
             SPEED = Integer.parseInt(PropertyManager.INSTANCE.getValue("BULLET_SPEED"));
     private final Dir dir;
     private final BufferedImage image;
@@ -24,22 +24,22 @@ public class Bullet {
         rectangle = new Rectangle(x, y, WIDTH, HEIGHT);
         switch (this.dir = dir) {
             case UP:
-                image = ImageManager.bulletUImage;
+                image = ImageManager.INSTANCE.bulletUImage;
                 break;
             case DOWN:
-                image = ImageManager.bulletDImage;
+                image = ImageManager.INSTANCE.bulletDImage;
                 break;
             case LEFT:
-                image = ImageManager.bulletLImage;
+                image = ImageManager.INSTANCE.bulletLImage;
                 break;
             case RIGHT:
-                image = ImageManager.bulletRImage;
+                image = ImageManager.INSTANCE.bulletRImage;
                 break;
             default:
                 image = null;
         }
         // ImageFactory2使用的子弹图片不是对称的
-        if (ImageManager.imageFactory instanceof ImageFactory1) return;
+        if (ImageManager.INSTANCE.imageFactory instanceof ImageFactory1) return;
         switch (this.dir) {
             case UP:
                 ++x;

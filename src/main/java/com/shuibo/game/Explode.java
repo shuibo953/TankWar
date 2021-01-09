@@ -3,7 +3,7 @@ package com.shuibo.game;
 import java.awt.*;
 
 public class Explode {
-    private static final int LIMIT = ImageManager.explodes.size();
+    private static final int LIMIT = ImageManager.INSTANCE.explodes.size();
     private final int x, y;
     private int count = 0;
 
@@ -14,7 +14,7 @@ public class Explode {
     }
 
     public void paint(Graphics graphics) {
-        graphics.drawImage(ImageManager.explodes.get(count++), x, y, null);
+        graphics.drawImage(ImageManager.INSTANCE.explodes.get(count++), x, y, null);
     }
 
     public boolean isExploded() {
