@@ -3,3 +3,4 @@ gameHeight=720
 enemyAmount=10
 TANK_SPEED=5
 BULLET_SPEED=10
+UP_LIMIT=30

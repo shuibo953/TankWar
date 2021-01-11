@@ -7,25 +7,25 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class GameFrame extends Frame {
-    private final int gameWidth = Integer.parseInt(PropertyManager.INSTANCE.getValue("gameWidth")),
-            gameHeight = Integer.parseInt(PropertyManager.INSTANCE.getValue("gameHeight"));
     private Image offScreenImage = null;
+    private final GameModel gameModel = GameModel.INSTANCE;
 
     private GameFrame() {
         setTitle("坦克世界");
-        setSize(gameWidth, gameHeight);
+        setSize(Integer.parseInt(PropertyManager.INSTANCE.getValue("gameWidth")),
+                Integer.parseInt(PropertyManager.INSTANCE.getValue("gameHeight")));
         setResizable(false);
         setVisible(true);
 
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                GameModel.INSTANCE.keyPressed(e);
+                gameModel.keyPressed(e);
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                GameModel.INSTANCE.keyReleased(e);
+                gameModel.keyReleased(e);
             }
         });
         addWindowListener(new WindowAdapter() {
@@ -40,27 +40,19 @@ public class GameFrame extends Frame {
         return TankWarFrameHolder.INSTANCE;
     }
 
-    public int getGameWidth() {
-        return gameWidth;
-    }
-
-    public int getGameHeight() {
-        return gameHeight;
-    }
-
     @Override
     public void update(Graphics g) {
-        if (offScreenImage == null) offScreenImage = this.createImage(gameWidth, gameHeight);
+        if (offScreenImage == null) offScreenImage = this.createImage(getWidth(), getHeight());
         Graphics gOffScreen = offScreenImage.getGraphics();
         gOffScreen.setColor(Color.BLACK);
-        gOffScreen.fillRect(0, 0, gameWidth, gameHeight);
+        gOffScreen.fillRect(0, 0, getWidth(), getHeight());
         paint(gOffScreen);
         g.drawImage(offScreenImage, 0, 0, null);
     }
 
     @Override
     public void paint(Graphics graphics) {
-        GameModel.INSTANCE.paint(graphics);
+        gameModel.paint(graphics);
     }
 
     private static class TankWarFrameHolder {

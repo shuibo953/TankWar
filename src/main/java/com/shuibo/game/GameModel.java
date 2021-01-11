@@ -14,16 +14,20 @@ import java.util.Iterator;
 
 public enum GameModel {
     INSTANCE;
-    private final ManualTank mainTank = new ManualTank(0, 30);
-    private final HashSet<Bullet> mainBullets = new HashSet<>();
+    private final int width = Integer.parseInt(PropertyManager.INSTANCE.getValue("gameWidth")),
+            height = Integer.parseInt(PropertyManager.INSTANCE.getValue("gameHeight")),
+            upLimit = Integer.parseInt(PropertyManager.INSTANCE.getValue("UP_LIMIT"));
+    private final ManualTank mainTank;
     private final HashSet<AutoTank> enemies = new HashSet<>();
+    private final HashSet<Bullet> mainBullets = new HashSet<>();
     private final HashSet<Bullet> enemyBullets = new HashSet<>();
     private final HashSet<Explode> explodes = new HashSet<>();
     private final ArrayList<Dir> mainTankDirs = new ArrayList<>();
-    private final int width = GameFrame.getInstance().getGameWidth(), height = GameFrame.getInstance().getGameHeight();
 
     {
-        for (int i = 0, enemyAmount = Integer.parseInt(PropertyManager.INSTANCE.getValue("enemyAmount")); i < enemyAmount; i++)
+        mainTank = new ManualTank(0, upLimit);
+        for (int i = 0, enemyAmount = Integer.parseInt(PropertyManager.INSTANCE.getValue("enemyAmount"));
+             i < enemyAmount; i++)
             enemies.add(new AutoTank(width / (enemyAmount + 1) * (i + 1), height / 2));
     }
 
@@ -132,6 +136,6 @@ public enum GameModel {
 
     private boolean isOffRange(Bullet bullet) {
         int x = bullet.getX(), y = bullet.getY();
-        return (x < 0 || y < 0 || x > width || y > height);
+        return (x < -Bullet.getWIDTH() || y < upLimit - Bullet.getHEIGHT() || x > width || y > height);
     }
 }

@@ -55,6 +55,14 @@ public class Bullet {
         }
     }
 
+    public static int getWIDTH() {
+        return WIDTH;
+    }
+
+    public static int getHEIGHT() {
+        return HEIGHT;
+    }
+
     public int getX() {
         return x;
     }
