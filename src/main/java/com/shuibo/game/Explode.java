@@ -1,5 +1,7 @@
 package com.shuibo.game;
 
+import com.shuibo.game.borrowed.Audio;
+
 import java.awt.*;
 
 public class Explode {

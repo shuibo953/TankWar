@@ -1,4 +1,4 @@
-package com.shuibo.game;
+package com.shuibo.game.borrowed;
 
 import java.io.IOException;
 

@@ -1,4 +1,4 @@
-package com.shuibo.game;
+package com.shuibo.game.borrowed;
 
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;

@@ -1,8 +1,8 @@
 package com.shuibo.game;
 
+import com.shuibo.game.borrowed.ImageUtil;
 import com.shuibo.game.imageFactory.ImageFactory;
 import com.shuibo.game.imageFactory.ImageFactory1;
-import com.shuibo.game.imageFactory.ImageFactory2;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
