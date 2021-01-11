@@ -19,8 +19,7 @@ public enum GameModel {
             upLimit = Integer.parseInt(PropertyManager.INSTANCE.getValue("UP_LIMIT"));
     private final ManualTank mainTank;
     private final HashSet<AutoTank> enemies = new HashSet<>();
-    private final HashSet<Bullet> mainBullets = new HashSet<>();
-    private final HashSet<Bullet> enemyBullets = new HashSet<>();
+    private final HashSet<Bullet> bullets = new HashSet<>();
     private final HashSet<Explode> explodes = new HashSet<>();
     private final ArrayList<Dir> mainTankDirs = new ArrayList<>();
 
@@ -73,16 +72,14 @@ public enum GameModel {
     }
 
     public void paint(Graphics graphics) {
-        mainBullets.forEach(bullet -> bullet.paint(graphics));
-        enemyBullets.forEach(bullet -> bullet.paint(graphics));
+        bullets.forEach(bullet -> bullet.paint(graphics));
         mainTank.paint(graphics);
         enemies.forEach(tank -> tank.paint(graphics));
         explodes.forEach(explode -> explode.paint(graphics));
         graphics.setColor(Color.WHITE);
-        graphics.drawString(String.format("我方子弹数量：%d", mainBullets.size()), 10, 60);
+        graphics.drawString(String.format("子弹数量：%d", bullets.size()), 10, 60);
         graphics.drawString(String.format("敌方数量：%d", enemies.size()), 10, 80);
-        graphics.drawString(String.format("敌方子弹数量：%d", enemyBullets.size()), 10, 100);
-        graphics.drawString(String.format("爆炸数量：%d", explodes.size()), 10, 120);
+        graphics.drawString(String.format("爆炸数量：%d", explodes.size()), 10, 100);
         nextState();
     }
 
@@ -91,25 +88,24 @@ public enum GameModel {
         ifFireNBomb();
         ifHitEnemy();
 
-        mainBullets.removeIf(this::isOffRange);
-        enemyBullets.removeIf(this::isOffRange);
+        bullets.removeIf(this::isOffRange);
         explodes.removeIf(Explode::isExploded);
 
         mainTank.setIsMoving_Dir(mainTankDirs);
-        mainTank.fire(mainBullets);
-        for (Tank enemy : enemies) enemy.fire(enemyBullets);
+        mainTank.fire(bullets);
+        for (Tank tank : enemies) tank.fire(bullets);
     }
 
     private void ifHitMain() {
-        for (Bullet bullet : enemyBullets) if (isCashing(mainTank, bullet)) System.exit(0);
+        for (Bullet bullet : bullets) if (isCashing(mainTank, bullet)) System.exit(0);
     }
 
     private void ifFireNBomb() {
-        Iterator<Bullet> iterator = mainBullets.iterator();
+        Iterator<Bullet> iterator = bullets.iterator();
         while (iterator.hasNext()) {
             Bullet bullet = iterator.next();
-            if (bullet instanceof NBomb) {
-                enemies.forEach(tank -> explodes.add(new Explode(tank.getX(), tank.getY())));
+            if (bullet.getGroup() == Group.PLAYER && bullet instanceof NBomb) {
+                enemies.forEach(tank -> explodes.add(new Explode(tank)));
                 enemies.clear();
                 iterator.remove();
                 break;
@@ -121,17 +117,17 @@ public enum GameModel {
         Iterator<AutoTank> enemyIterator = enemies.iterator();
         while (enemyIterator.hasNext()) {
             Tank enemy = enemyIterator.next();
-            int pre = mainBullets.size();
-            mainBullets.removeIf(bullet -> isCashing(enemy, bullet));
-            if (pre != mainBullets.size()) {
+            int pre = bullets.size();
+            bullets.removeIf(bullet -> isCashing(enemy, bullet));
+            if (pre != bullets.size()) {
                 enemyIterator.remove();
-                explodes.add(new Explode(enemy.getX(), enemy.getY()));
+                explodes.add(new Explode(enemy));
             }
         }
     }
 
     private boolean isCashing(Tank tank, Bullet bullet) {
-        return tank.getRectangle().intersects(bullet.getRectangle());
+        return tank.getGroup() != bullet.getGroup() && tank.getRectangle().intersects(bullet.getRectangle());
     }
 
     private boolean isOffRange(Bullet bullet) {

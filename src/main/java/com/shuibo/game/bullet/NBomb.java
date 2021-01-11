@@ -1,9 +1,10 @@
 package com.shuibo.game.bullet;
 
 import com.shuibo.game.Dir;
+import com.shuibo.game.tank.Tank;
 
 public class NBomb extends Bullet{
-    public NBomb(int tankX, int tankY, Dir dir) {
-        super(tankX, tankY, dir);
+    public NBomb(Tank tank) {
+        super(tank);
     }
 }

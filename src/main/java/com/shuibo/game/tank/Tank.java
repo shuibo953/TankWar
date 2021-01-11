@@ -19,6 +19,7 @@ public abstract class Tank {
             LEFT_LIMIT = 0,
             RIGHT_LIMIT = Integer.parseInt(PropertyManager.INSTANCE.getValue("gameWidth")) - HEIGHT;
     private final Rectangle rectangle;
+    private final Group group;
     private int x, y;           //坦克的位置
     private FireStrategy fireStrategy = DefaultFireStrategy.STRATEGY;
     private Dir dir = Dir.UP;   //坦克的朝向
@@ -28,6 +29,7 @@ public abstract class Tank {
         this.x = x;
         this.y = y;
         rectangle = new Rectangle(this.x, this.y, WIDTH, HEIGHT);
+        group = (this instanceof ManualTank ? Group.PLAYER : Group.ENEMY);
     }
 
     public static int getWidth() {
@@ -52,6 +54,10 @@ public abstract class Tank {
 
     public void setDir(Dir dir) {
         this.dir = dir;
+    }
+
+    public Group getGroup() {
+        return group;
     }
 
     public FireStrategy getFireStrategy() {

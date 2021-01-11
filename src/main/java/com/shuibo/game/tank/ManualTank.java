@@ -1,6 +1,7 @@
 package com.shuibo.game.tank;
 
 import com.shuibo.game.Dir;
+import com.shuibo.game.Group;
 import com.shuibo.game.fireStrategy.DefaultFireStrategy;
 import com.shuibo.game.fireStrategy.FireStrategy;
 import com.shuibo.game.fireStrategy.FourDirectionFireStrategy;

@@ -1,6 +1,7 @@
 package com.shuibo.game.tank;
 
 import com.shuibo.game.Dir;
+import com.shuibo.game.Group;
 
 import java.awt.*;
 import java.util.Random;

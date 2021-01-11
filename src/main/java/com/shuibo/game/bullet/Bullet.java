@@ -1,7 +1,9 @@
 package com.shuibo.game.bullet;
 
 import com.shuibo.game.Dir;
+import com.shuibo.game.Group;
 import com.shuibo.game.imageFactory.ImageFactory1;
+import com.shuibo.game.tank.ManualTank;
 import com.shuibo.game.tank.Tank;
 import com.shuibo.game.PropertyManager;
 import com.shuibo.game.ImageManager;
@@ -16,12 +18,38 @@ public class Bullet {
     private final Dir dir;
     private final BufferedImage image;
     private final Rectangle rectangle;
+    private final Group group;
     private int x, y;
 
-    public Bullet(int tankX, int tankY, Dir dir) {
-        x = tankX + (Tank.getWidth() - WIDTH) / 2;
-        y = tankY + (Tank.getHeight() - HEIGHT) / 2;
+    public Bullet(Tank tank) {
+        x = tank.getX() + (Tank.getWidth() - WIDTH) / 2;
+        y = tank.getY() + (Tank.getHeight() - HEIGHT) / 2;
         rectangle = new Rectangle(x, y, WIDTH, HEIGHT);
+        group = (tank instanceof ManualTank ? Group.PLAYER : Group.ENEMY);
+        switch (dir = tank.getDir()) {
+            case UP:
+                image = ImageManager.INSTANCE.getBulletUImage();
+                break;
+            case DOWN:
+                image = ImageManager.INSTANCE.getBulletDImage();
+                break;
+            case LEFT:
+                image = ImageManager.INSTANCE.getBulletLImage();
+                break;
+            case RIGHT:
+                image = ImageManager.INSTANCE.getBulletRImage();
+                break;
+            default:
+                image = null;
+        }
+        imageAdjustment();
+    }
+
+    public Bullet(Tank tank, Dir dir) {
+        x = tank.getX() + (Tank.getWidth() - WIDTH) / 2;
+        y = tank.getY() + (Tank.getHeight() - HEIGHT) / 2;
+        rectangle = new Rectangle(x, y, WIDTH, HEIGHT);
+        group = (tank instanceof ManualTank ? Group.PLAYER : Group.ENEMY);
         switch (this.dir = dir) {
             case UP:
                 image = ImageManager.INSTANCE.getBulletUImage();
@@ -38,21 +66,7 @@ public class Bullet {
             default:
                 image = null;
         }
-        // ImageFactory2使用的子弹图片不是对称的
-        if (ImageManager.INSTANCE.getImageFactory() instanceof ImageFactory1) return;
-        switch (this.dir) {
-            case UP:
-                ++x;
-                break;
-            case DOWN:
-                --x;
-                break;
-            case LEFT:
-                --y;
-                break;
-            case RIGHT:
-                ++y;
-        }
+        imageAdjustment();
     }
 
     public static int getWIDTH() {
@@ -94,5 +108,27 @@ public class Bullet {
             case RIGHT:
                 rectangle.x = x += SPEED;
         }
+    }
+
+    private void imageAdjustment() {
+        // ImageFactory2使用的子弹图片不是对称的
+        if (ImageManager.INSTANCE.getImageFactory() instanceof ImageFactory1) return;
+        switch (this.dir) {
+            case UP:
+                ++x;
+                break;
+            case DOWN:
+                --x;
+                break;
+            case LEFT:
+                --y;
+                break;
+            case RIGHT:
+                ++y;
+        }
+    }
+
+    public Group getGroup() {
+        return group;
     }
 }

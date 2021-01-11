@@ -11,6 +11,6 @@ public enum NBombFireStrategy implements FireStrategy {
 
     @Override
     public void fire(HashSet<Bullet> bullets, Tank tank) {
-        bullets.add(new NBomb(tank.getX(), tank.getY(), tank.getDir()));
+        bullets.add(new NBomb(tank));
     }
 }

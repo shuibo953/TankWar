@@ -1,6 +1,7 @@
 package com.shuibo.game;
 
 import com.shuibo.game.borrowed.Audio;
+import com.shuibo.game.tank.Tank;
 
 import java.awt.*;
 
@@ -9,9 +10,9 @@ public class Explode {
     private final int x, y;
     private int count = 0;
 
-    public Explode(int x, int y) {
-        this.x = x;
-        this.y = y;
+    public Explode(Tank tank) {
+        x = tank.getX();
+        y = tank.getY();
         new Thread(() -> new Audio("audio/explode.wav").play()).start();
     }
 
