@@ -2,17 +2,16 @@ package com.shuibo.game;
 
 import com.shuibo.game.borrowed.ImageUtil;
 import com.shuibo.game.imageFactory.ImageFactory;
-import com.shuibo.game.imageFactory.ImageFactory1;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public enum ImageManager {
     INSTANCE;
-    private final ImageFactory imageFactory = ImageFactory1.getInstance();
+    private final ImageFactory imageFactory = PropertyManager.INSTANCE.getImageFactory();
     private final ArrayList<BufferedImage> explodes = imageFactory.getExplodeImage();
     private final BufferedImage tankUImage, tankDImage, tankLImage, tankRImage,
-            bulletUImage, bulletDImage, bulletLImage, bulletRImage;
+            bulletUImage, bulletDImage, bulletLImage, bulletRImage, NBombImage;
 
     {
         tankUImage = imageFactory.getTankImage();
@@ -23,6 +22,7 @@ public enum ImageManager {
         bulletDImage = ImageUtil.rotateImage(bulletUImage, 180);
         bulletLImage = ImageUtil.rotateImage(bulletUImage, -90);
         bulletRImage = ImageUtil.rotateImage(bulletUImage, 90);
+        NBombImage = imageFactory.getNBombImage();
     }
 
     public ImageFactory getImageFactory() {
@@ -63,5 +63,9 @@ public enum ImageManager {
 
     public BufferedImage getBulletRImage() {
         return bulletRImage;
+    }
+
+    public BufferedImage getNBombImage() {
+        return NBombImage;
     }
 }

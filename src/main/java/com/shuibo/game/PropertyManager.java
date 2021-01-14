@@ -1,11 +1,17 @@
 package com.shuibo.game;
 
+import com.shuibo.game.imageFactory.ImageFactory;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 import java.io.IOException;
 import java.util.Properties;
 
 public enum PropertyManager {
     INSTANCE;
     private final Properties properties = new Properties();
+    private final ImageFactory imageFactory =
+            (ImageFactory) (new ClassPathXmlApplicationContext("practiceSpringApp.xml"))
+                    .getBean("imageFactory");
 
     {
         try {
@@ -13,6 +19,10 @@ public enum PropertyManager {
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }
+    }
+
+    public ImageFactory getImageFactory() {
+        return imageFactory;
     }
 
     public String getValue(String key) {

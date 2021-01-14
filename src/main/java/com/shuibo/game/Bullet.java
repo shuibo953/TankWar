@@ -1,31 +1,27 @@
-package com.shuibo.game.bullet;
+package com.shuibo.game;
 
-import com.shuibo.game.Dir;
-import com.shuibo.game.Group;
+import com.shuibo.game.*;
 import com.shuibo.game.imageFactory.ImageFactory1;
-import com.shuibo.game.tank.ManualTank;
-import com.shuibo.game.tank.Tank;
-import com.shuibo.game.PropertyManager;
-import com.shuibo.game.ImageManager;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class Bullet {
-    private static final int WIDTH = ImageManager.INSTANCE.getBulletUImage().getWidth(),
-            HEIGHT = ImageManager.INSTANCE.getBulletUImage().getHeight(),
-            SPEED = Integer.parseInt(PropertyManager.INSTANCE.getValue("BULLET_SPEED"));
-    private final Dir dir;
+public class Bullet extends GameObject {
+    public static final int SPEED = Integer.parseInt(PropertyManager.INSTANCE.getValue("BULLET_SPEED")),
+            WIDTH = ImageManager.INSTANCE.getBulletUImage().getWidth(),
+            HEIGHT = ImageManager.INSTANCE.getBulletUImage().getHeight();
+    public final Dir dir;
+    public final Group group;
     private final BufferedImage image;
     private final Rectangle rectangle;
-    private final Group group;
     private int x, y;
+    // 核弹：垂直移动y image
 
     public Bullet(Tank tank) {
-        x = tank.getX() + (Tank.getWidth() - WIDTH) / 2;
-        y = tank.getY() + (Tank.getHeight() - HEIGHT) / 2;
+        x = tank.getX() + (Tank.WIDTH - WIDTH) / 2;
+        y = tank.getY() + (Tank.HEIGHT - HEIGHT) / 2;
         rectangle = new Rectangle(x, y, WIDTH, HEIGHT);
-        group = (tank instanceof ManualTank ? Group.PLAYER : Group.ENEMY);
+        group = tank.getGroup();
         switch (dir = tank.getDir()) {
             case UP:
                 image = ImageManager.INSTANCE.getBulletUImage();
@@ -46,10 +42,10 @@ public class Bullet {
     }
 
     public Bullet(Tank tank, Dir dir) {
-        x = tank.getX() + (Tank.getWidth() - WIDTH) / 2;
-        y = tank.getY() + (Tank.getHeight() - HEIGHT) / 2;
+        x = tank.getX() + (Tank.WIDTH - WIDTH) / 2;
+        y = tank.getY() + (Tank.HEIGHT - HEIGHT) / 2;
         rectangle = new Rectangle(x, y, WIDTH, HEIGHT);
-        group = (tank instanceof ManualTank ? Group.PLAYER : Group.ENEMY);
+        group = tank.getGroup();
         switch (this.dir = dir) {
             case UP:
                 image = ImageManager.INSTANCE.getBulletUImage();
@@ -69,20 +65,20 @@ public class Bullet {
         imageAdjustment();
     }
 
-    public static int getWIDTH() {
-        return WIDTH;
-    }
-
-    public static int getHEIGHT() {
-        return HEIGHT;
-    }
-
     public int getX() {
         return x;
     }
 
+    public void setX(int x) {
+        this.x = x;
+    }
+
     public int getY() {
         return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
 
     public Rectangle getRectangle() {
@@ -91,23 +87,6 @@ public class Bullet {
 
     public void paint(Graphics graphics) {
         graphics.drawImage(image, x, y, null);
-        updateXY();
-    }
-
-    private void updateXY() {
-        switch (dir) {
-            case UP:
-                rectangle.y = y -= SPEED;
-                break;
-            case DOWN:
-                rectangle.y = y += SPEED;
-                break;
-            case LEFT:
-                rectangle.x = x -= SPEED;
-                break;
-            case RIGHT:
-                rectangle.x = x += SPEED;
-        }
     }
 
     private void imageAdjustment() {
@@ -126,9 +105,5 @@ public class Bullet {
             case RIGHT:
                 ++y;
         }
-    }
-
-    public Group getGroup() {
-        return group;
     }
 }

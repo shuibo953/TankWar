@@ -12,8 +12,8 @@ public class GameFrame extends Frame {
 
     private GameFrame() {
         setTitle("坦克世界");
-        setSize(Integer.parseInt(PropertyManager.INSTANCE.getValue("gameWidth")),
-                Integer.parseInt(PropertyManager.INSTANCE.getValue("gameHeight")));
+        setSize(GameObject.GAME_WIDTH,
+                GameObject.GAME_HEIGHT);
         setResizable(false);
         setVisible(true);
 

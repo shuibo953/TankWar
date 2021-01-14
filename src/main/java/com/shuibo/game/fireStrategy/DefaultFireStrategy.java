@@ -1,15 +1,18 @@
 package com.shuibo.game.fireStrategy;
 
-import com.shuibo.game.bullet.Bullet;
-import com.shuibo.game.tank.Tank;
+import com.shuibo.game.GameObject;
+import com.shuibo.game.Bullet;
+import com.shuibo.game.Tank;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 
 public enum DefaultFireStrategy implements FireStrategy {
     STRATEGY;
 
     @Override
-    public void fire(HashSet<Bullet> bullets, Tank tank) {
-        bullets.add(new Bullet(tank));
+    public ArrayList<GameObject> fire(Tank tank) {
+        ArrayList<GameObject> gameObjects = new ArrayList<>();
+        gameObjects.add(new Bullet(tank));
+        return gameObjects;
     }
 }

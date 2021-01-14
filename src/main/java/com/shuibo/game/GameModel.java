@@ -1,137 +1,128 @@
 package com.shuibo.game;
 
-import com.shuibo.game.bullet.Bullet;
-import com.shuibo.game.bullet.NBomb;
-import com.shuibo.game.tank.AutoTank;
-import com.shuibo.game.tank.ManualTank;
-import com.shuibo.game.tank.Tank;
+import com.shuibo.game.chainOfResponsibility.*;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 
 public enum GameModel {
     INSTANCE;
-    private final int width = Integer.parseInt(PropertyManager.INSTANCE.getValue("gameWidth")),
-            height = Integer.parseInt(PropertyManager.INSTANCE.getValue("gameHeight")),
-            upLimit = Integer.parseInt(PropertyManager.INSTANCE.getValue("UP_LIMIT"));
-    private final ManualTank mainTank;
-    private final HashSet<AutoTank> enemies = new HashSet<>();
-    private final HashSet<Bullet> bullets = new HashSet<>();
-    private final HashSet<Explode> explodes = new HashSet<>();
-    private final ArrayList<Dir> mainTankDirs = new ArrayList<>();
+    private final ChainOfNextState chainOfNextState = ChainOfNextState.getInstance();
+    private final ChainOfCollision chainOfCollision = ChainOfCollision.getInstance();
+    private final ArrayList<GameObject> gameObjects = new ArrayList<>();
+    private final HashSet<GameObject> goingToAdd = new HashSet<>(), goingToRemove = new HashSet<>();
+
+    private final Tank playerTank;
+    private final ArrayList<Dir> playerDirs = new ArrayList<>();
+    private boolean isPlayerFiring;
 
     {
-        mainTank = new ManualTank(0, upLimit);
-        for (int i = 0, enemyAmount = Integer.parseInt(PropertyManager.INSTANCE.getValue("enemyAmount"));
-             i < enemyAmount; i++)
-            enemies.add(new AutoTank(width / (enemyAmount + 1) * (i + 1), height / 2));
+        playerTank = new Tank(0, GameObject.GAME_UP_LIMIT, Group.PLAYER);
+        for (int enemyAmount = Integer.parseInt(PropertyManager.INSTANCE.getValue("enemyAmount")),
+             width = GameObject.GAME_WIDTH,
+             height = GameObject.GAME_HEIGHT,
+             i = 0; i < enemyAmount; i++)
+            gameObjects.add(new Tank(width / (enemyAmount + 1) * (i + 1), height / 2, Group.ENEMY));
+    }
+
+    public HashSet<GameObject> getGoingToAdd() {
+        return goingToAdd;
+    }
+
+    public HashSet<GameObject> getGoingToRemove() {
+        return goingToRemove;
+    }
+
+    public ArrayList<GameObject> getGameObjects() {
+        return gameObjects;
     }
 
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_UP:
-                if (!mainTankDirs.contains(Dir.UP)) mainTankDirs.add(Dir.UP);
+                if (!playerDirs.contains(Dir.UP)) playerDirs.add(Dir.UP);
                 break;
             case KeyEvent.VK_DOWN:
-                if (!mainTankDirs.contains(Dir.DOWN)) mainTankDirs.add(Dir.DOWN);
+                if (!playerDirs.contains(Dir.DOWN)) playerDirs.add(Dir.DOWN);
                 break;
             case KeyEvent.VK_LEFT:
-                if (!mainTankDirs.contains(Dir.LEFT)) mainTankDirs.add(Dir.LEFT);
+                if (!playerDirs.contains(Dir.LEFT)) playerDirs.add(Dir.LEFT);
                 break;
             case KeyEvent.VK_RIGHT:
-                if (!mainTankDirs.contains(Dir.RIGHT)) mainTankDirs.add(Dir.RIGHT);
+                if (!playerDirs.contains(Dir.RIGHT)) playerDirs.add(Dir.RIGHT);
                 break;
             case KeyEvent.VK_SPACE:
-                mainTank.setIsFiring(true);
+                isPlayerFiring = true;
                 break;
             case KeyEvent.VK_CONTROL:
-                mainTank.changeFireStrategy();
+                playerTank.changeFireStrategy();
         }
     }
 
     public void keyReleased(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_UP:
-                mainTankDirs.remove(Dir.UP);
+                playerDirs.remove(Dir.UP);
                 break;
             case KeyEvent.VK_DOWN:
-                mainTankDirs.remove(Dir.DOWN);
+                playerDirs.remove(Dir.DOWN);
                 break;
             case KeyEvent.VK_LEFT:
-                mainTankDirs.remove(Dir.LEFT);
+                playerDirs.remove(Dir.LEFT);
                 break;
             case KeyEvent.VK_RIGHT:
-                mainTankDirs.remove(Dir.RIGHT);
+                playerDirs.remove(Dir.RIGHT);
                 break;
             case KeyEvent.VK_SPACE:
-                mainTank.setIsFiring(false);
+                isPlayerFiring = false;
         }
     }
 
     public void paint(Graphics graphics) {
-        bullets.forEach(bullet -> bullet.paint(graphics));
-        mainTank.paint(graphics);
-        enemies.forEach(tank -> tank.paint(graphics));
-        explodes.forEach(explode -> explode.paint(graphics));
+        for (int i = gameObjects.size() - 1; i >= 0; i--) gameObjects.get(i).paint(graphics);
+        playerTank.paint(graphics);
         graphics.setColor(Color.WHITE);
-        graphics.drawString(String.format("子弹数量：%d", bullets.size()), 10, 60);
-        graphics.drawString(String.format("敌方数量：%d", enemies.size()), 10, 80);
-        graphics.drawString(String.format("爆炸数量：%d", explodes.size()), 10, 100);
+        graphics.drawString(String.format("数量：%d", gameObjects.size()), 10, 50);
+        graphics.drawString(String.format("新增数量：%d", goingToAdd.size()), 10, 70);
+        graphics.drawString(String.format("删除数量：%d", goingToRemove.size()), 10, 90);
         nextState();
     }
 
     private void nextState() {
-        ifHitMain();
-        ifFireNBomb();
-        ifHitEnemy();
+        gameObjects.forEach(chainOfNextState::update);
+        updateGameObjects();
 
-        bullets.removeIf(this::isOffRange);
-        explodes.removeIf(Explode::isExploded);
-
-        mainTank.setIsMoving_Dir(mainTankDirs);
-        mainTank.fire(bullets);
-        for (Tank tank : enemies) tank.fire(bullets);
-    }
-
-    private void ifHitMain() {
-        for (Bullet bullet : bullets) if (isCashing(mainTank, bullet)) System.exit(0);
-    }
-
-    private void ifFireNBomb() {
-        Iterator<Bullet> iterator = bullets.iterator();
-        while (iterator.hasNext()) {
-            Bullet bullet = iterator.next();
-            if (bullet.getGroup() == Group.PLAYER && bullet instanceof NBomb) {
-                enemies.forEach(tank -> explodes.add(new Explode(tank)));
-                enemies.clear();
-                iterator.remove();
-                break;
+        for (int i = 0; i < gameObjects.size(); i++) {
+            GameObject gameObject1 = gameObjects.get(i);
+            for (int j = i + 1; j < gameObjects.size(); j++) {
+                GameObject gameObject2 = gameObjects.get(j);
+                chainOfCollision.update(gameObject1, gameObject2);
             }
+        }
+        updateGameObjects();
+
+        playerAction();
+    }
+
+    private void updateGameObjects() {
+        gameObjects.addAll(goingToAdd);
+        gameObjects.removeAll(goingToRemove);
+        goingToAdd.clear();
+        goingToRemove.clear();
+    }
+
+    private void playerAction() {
+        if (isPlayerFiring) gameObjects.addAll(playerTank.fire());
+        if (!playerDirs.isEmpty()) {
+            Dir dir = playerDirs.get(playerDirs.size() - 1);
+            if (playerTank.getDir().equals(dir)) playerTank.move();
+            else playerTank.setDir(dir);
         }
     }
 
-    private void ifHitEnemy() {
-        Iterator<AutoTank> enemyIterator = enemies.iterator();
-        while (enemyIterator.hasNext()) {
-            Tank enemy = enemyIterator.next();
-            int pre = bullets.size();
-            bullets.removeIf(bullet -> isCashing(enemy, bullet));
-            if (pre != bullets.size()) {
-                enemyIterator.remove();
-                explodes.add(new Explode(enemy));
-            }
-        }
-    }
-
-    private boolean isCashing(Tank tank, Bullet bullet) {
-        return tank.getGroup() != bullet.getGroup() && tank.getRectangle().intersects(bullet.getRectangle());
-    }
-
-    private boolean isOffRange(Bullet bullet) {
-        int x = bullet.getX(), y = bullet.getY();
-        return (x < -Bullet.getWIDTH() || y < upLimit - Bullet.getHEIGHT() || x > width || y > height);
+    public Tank getPlayer() {
+        return playerTank;
     }
 }

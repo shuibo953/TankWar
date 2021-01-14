@@ -50,6 +50,16 @@ public class ImageFactory1 extends ImageFactory {
         return result;
     }
 
+    @Override
+    public BufferedImage getNBombImage() {
+        try {
+            return ImageIO.read(Objects.requireNonNull(getClassLoader().getResourceAsStream("image/NBomb.png")));
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+            return null;
+        }
+    }
+
     private static class ImageFactory1Holder {
         static final ImageFactory1 INSTANCE = new ImageFactory1();
     }

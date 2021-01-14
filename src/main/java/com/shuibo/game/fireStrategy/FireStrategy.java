@@ -1,10 +1,10 @@
 package com.shuibo.game.fireStrategy;
 
-import com.shuibo.game.bullet.Bullet;
-import com.shuibo.game.tank.Tank;
+import com.shuibo.game.GameObject;
+import com.shuibo.game.Tank;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 
 public interface FireStrategy {
-    void fire(HashSet<Bullet> bullets, Tank tank);
+    ArrayList<GameObject> fire(Tank tank);
 }

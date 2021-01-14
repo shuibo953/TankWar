@@ -4,9 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
-    <bean id="driver" class="com.shuibo.game.practiceSpring.Driver"/>
-    <bean id="tank" class="com.shuibo.game.practiceSpring.Tank">
-        <property name="driver" ref="driver"/>
+    <bean id="imageFactory" class="com.shuibo.game.imageFactory.ImageFactory2">
     </bean>
 
 </beans>

@@ -15,4 +15,6 @@ public abstract class ImageFactory {
     public abstract BufferedImage getBulletImage();
 
     public abstract ArrayList<BufferedImage> getExplodeImage();
+
+    public abstract BufferedImage getNBombImage();
 }
