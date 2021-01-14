@@ -10,7 +10,7 @@ public enum PropertyManager {
     INSTANCE;
     private final Properties properties = new Properties();
     private final ImageFactory imageFactory =
-            (ImageFactory) (new ClassPathXmlApplicationContext("practiceSpringApp.xml"))
+            (ImageFactory) (new ClassPathXmlApplicationContext("App.xml"))
                     .getBean("imageFactory");
 
     {
